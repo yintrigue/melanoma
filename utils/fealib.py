@@ -11,7 +11,6 @@ import numpy as np
 import sys
 
 class TFRECParser:
-    __IMG_PLOT_DIMENSION = (6, 6)
     __TFREC_DESCRIPTOR = {"image_name": tf.io.FixedLenFeature([], tf.string),
                           "image": tf.io.FixedLenFeature([], tf.string)}
 
@@ -39,18 +38,18 @@ class TFRECParser:
     def get_image(self, image_name: str) -> Image:
         return Image.fromarray(self.get_image_arr(image_name))
 
-    def plot_image(self, image_name: str) -> Image:
+    def plot_image(self, image_name: str, figsize: list = [5, 5]) -> Image:
         img_arr = self.get_image_arr(image_name)
         img = Image.fromarray(img_arr)
 
         # prep title
-        title = "{}, {}x{}, {:.2f}MB".format(image_name,
+        title = "{}\n{}x{}, {:.2f}MB (size of np.ndarray)".format(image_name,
                                              img.size[0],
                                              img.size[1],
                                              sys.getsizeof(img_arr)/1024/1024)
 
         # render plot
-        plt.figure(figsize=TFRECParser.__IMG_PLOT_DIMENSION)
+        plt.figure(figsize=figsize)
         io.imshow(img_arr)
         plt.title(title)
         plt.show()
