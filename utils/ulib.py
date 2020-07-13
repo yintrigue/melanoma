@@ -1,6 +1,8 @@
 import logging 
 
 class Logger:
+    """Class to provide basic functions for producing log files.
+    """
     __loggers = {}
     __path = 'log.txt'
 
@@ -29,3 +31,23 @@ class Logger:
         Logger.__loggers[name] = logger
 
         return logger
+
+class StdLogger:
+    """Class to output stdouts to both console and log file.
+    """
+    
+    def __init__(self) -> None:
+        self.terminal_original = None
+        self.terminal = None
+
+    def open(self, log_file: str, flush_log_file: bool = False) -> None:
+        self.terminal_original = sys.stdout
+        if flush_log_file:
+            self.terminal = open(log_file, "w")
+        else:
+            self.terminal = open(log_file, "a")
+        sys.stdout = self.terminal
+
+    def close(self) -> None:
+        self.terminal.close()
+        sys.stdout = self.terminal_original
