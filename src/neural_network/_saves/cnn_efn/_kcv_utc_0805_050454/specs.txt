@@ -1,0 +1,131 @@
+PROCESSOR = "TPU" 
+
+FOLDS = 5
+TFREC_SPLITS = 15
+
+# dim 512 and bs 128 is the limit of TPU on Colab
+BATCH_SIZES = [64] * FOLDS
+EPOCHS = [10] * FOLDS
+
+# 0: BinaryCrossentropy
+# 1: FocalLoss
+LOSS_FUNCTIONS = [1, 1, 1, 1, 1]
+LOSS_FUNC_NAMES = ['Binary Crossentropy', 'Focal Loss']
+FL_GAMMA = 2.0
+FL_ALPHA = 0.75
+LEARNING_RATE = 0.001
+
+EFF_NETS = [0, 0, 0, 0, 0]
+IMG_SIZES = [256, 256, 256, 256, 256]
+
+TFREC_TRAIN_SETS = [None] * FOLDS
+for i, dim in enumerate(IMG_SIZES):
+    TFREC_TRAIN_SETS[i] = tf.io.gfile.glob(TFREC_GCS[dim] + '/train*.tfrec')
+
+TTA_STEPS = 10
+RANDOM_AUG = False
+
+BEST_MODEL = True
+SIGMOID_THD = 0.2
+
+
+# pull training dataset
+ds_train_meta, ds_train_img, steps_train = \
+                                    get_dual_dataset(
+                                                files_train, 
+                                                augment=RANDOM_AUG, 
+                                                shuffle=True, 
+                                                repeat=True,
+                                                dim=IMG_SIZES[fold], 
+                                                batch_size=BATCH_SIZES[fold],
+                                                drop_remainder=drop_remainder)
+# pull validation dataset
+ds_valid_meta, ds_valid_img, steps_valid = \
+                                    get_dual_dataset(
+                                                files_valid,
+                                                augment=False,
+                                                shuffle=True,
+                                                repeat=True,
+                                                dim=IMG_SIZES[fold],
+                                                batch_size=BATCH_SIZES[fold],
+                                                drop_remainder=drop_remainder)
+
+
+def build_efn_metann(dim: int, 
+                     ef: int, 
+                     loss: int = 0,
+                     sig_thd: float = SIGMOID_THD,
+                     fl_gamma: float = FL_GAMMA,
+                     fl_alpha: float = FL_ALPHA,
+                     lr: float = LEARNING_RATE) -> Sequential:
+    DROP_OUT_RATE = 0.5
+
+    # How EfficientNet scale? https://tinyurl.com/yxk355ye
+    EFNS = [efn.EfficientNetB0, 
+            efn.EfficientNetB1, 
+            efn.EfficientNetB2, 
+            efn.EfficientNetB3, 
+            efn.EfficientNetB4, 
+            efn.EfficientNetB5, 
+            efn.EfficientNetB6,
+            efn.EfficientNetB7]
+    LOSS_FS = [keras.losses.BinaryCrossentropy(label_smoothing=0.05),
+               focal_loss(fl_gamma, fl_alpha)]
+    
+    # building EfficientNet
+    m_efn = Sequential()
+    base = EFNS[ef](weights="imagenet", 
+                    include_top=False, 
+                    input_shape=(dim, dim, 3))
+    m_efn.add(base)
+    m_efn.add(GlobalAveragePooling2D())
+
+    # building nn for metadata
+    # input_dim = age + sex + anatom = 1 + 2 + 6 = 9
+    # order of dense, activation, BatchNorm, Drop-out, etc.: https://tinyurl.com/y3a2w3n7
+    m_metann = Sequential()
+    m_metann.add(Dense(32, input_dim=9, activation='relu'))
+    m_metann.add(BatchNormalization())
+    m_metann.add(Dropout(DROP_OUT_RATE))
+    
+    m_metann.add(Dense(32, activation='relu'))
+    m_metann.add(BatchNormalization())
+    m_metann.add(Dropout(DROP_OUT_RATE))
+    
+    # concatenate the two outputs 
+    # https://tinyurl.com/y3e7yhgm
+    # https://tinyurl.com/y4s5qzuy
+    concat = Concatenate()([m_efn.output, m_metann.output])
+    concat = Dense(512, activation='relu')(concat)
+    concat = BatchNormalization()(concat)
+    concat = Dropout(DROP_OUT_RATE)(concat)
+
+    out = Dense(1, activation='sigmoid')(concat)
+
+    # build and compile the full model
+    m_final = Model(inputs=[m_metann.input, m_efn.input], outputs=out)
+    m_final.compile(optimizer=keras.optimizers.Adam(learning_rate=lr), 
+                    loss=LOSS_FS[loss], 
+                    metrics=[AUC(),
+                             BinaryAccuracy(threshold=sig_thd),
+                             Recall(thresholds=sig_thd)])
+    return m_final
+
+def aug_image(img, augment=True, dim=256):
+    """Apply random transformation.
+    """
+    img = tf.image.decode_jpeg(img, channels=3)
+    img = tf.cast(img, tf.float32) / 255.0
+    
+    if augment:
+        img = tf.image.random_flip_left_right(img)
+        img = tf.image.random_flip_up_down(img)
+        img = tf.image.random_hue(img, 0.05)
+        img = tf.image.random_saturation(img, 0.8, 1.2)
+        img = tf.image.random_contrast(img, 0.8, 1.2)
+        img = tf.image.random_brightness(img, 0.1)
+        img = tf.clip_by_value(img, 0.0, 1.0)
+                      
+    img = tf.reshape(img, [dim,dim, 3])
+            
+    return img

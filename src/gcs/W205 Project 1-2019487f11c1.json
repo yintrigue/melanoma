@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "fluted-bee-273018",
+  "private_key_id": "2019487f11c1d66d2fde6f3ec65b0f13a6336684",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC3SyrVJW1+occI\nqGjKYIYKMZrLfdWlS1i3S1kSqmYxnomwSzBSReTuGL22y3FJQTTdbvv92H2+uL7Z\nQuKcmKkQglL8Rtol1qs382ZMbLdKFVT+AOnX/neg8t1MxIfxN27a6DBg3jKMcRF5\n211MRdadmdfit8vh1ZHMR9eO7gMv2rCyEbC6KIVFztbXuIBc7M00yDhq21xqMxlk\nPgZzVio7tv+EhMvafP5BXPu4vvJeM118F5vvvZ7eVI5VaWA5MwJHQ/pk3BU+kS5R\ntfvkMdI2UTW3ikLNYsiDm//VuVg2/s6Edg9KSYN1ev5fN7e1yuUmpKcpXAqfoGwz\nKR9twblzAgMBAAECggEAJ0Lsm9d2isdwcMRSHfdq/sf9VlVP7CYljK2RGNRzK3HA\nIIkagqUCEpYuHPea/ov/HOdnBsrWtIGyL6uKCu0QWb7ws6UhmTVQW53BbeFjqXTE\nTdw4OtIBIfKjwIvgaqTrE+zkX/t4bGjTy3xXkbzr6bpIagHgpDExF8bTv4PwHtGm\nTpIbwUMJBVn2L32IqAx+m0QcwnMxpC7b9eBXAXqnPHGtvufqbjzT6INc8KtGgSqD\nlSwFZFYYIGuEuyJrr5iAetfPwVQWyMjr57cBN8LJxAeQYY0LouUZwwQuBi4jzwsh\nCZR/ayPdeVxmWnjJM/DWcAACPlsmBRyWZvKPO6HF8QKBgQDllws/DnQnUrOifE14\ngt9SdNCJamaGLLbjAaeiyczsAG9vkeYhLjzvog2j/2rX/3cMdhYyDsUC6iMJLAtf\n6+pNg+Ul68r6uog2cRIaaffvHcPddjBEQ+4F60Kco96+Fq3Wv6vdcUHg4F57K7yx\nngBKp4CguVI4pCNZ35AnyYsF/wKBgQDMYMoTgqieIlH1RRDLkgj7PyI/GBdkkSTS\nZpgNCyR+QdPw9ChmEL7L0Rur1CsWKu0aW2ULxf2roK2UESDlF9k1YH0Eqy7KQq6K\nYCrr0lfpnAwm40NcFv3+cbnWjOwulXwvqwMlfX9A4w4lx4Bazh3KS/Y2Gbgdeb67\nF806o0iUjQKBgCSZGkrX8/4cudPp+rN+MTlEs8Vj96nl0NWI+v8BKjBotVrUqBmb\n9EzCyWfeHFsINyL+Y/Vg01jul90rbzjAM55dqxaLatTjDTmYdqlNQR+V4BYadAE9\nzuCUqw6rNKOam+WCslPfbP/65DTAORkbNbKw1tlIEWpEB/qYn7Mn9ohjAoGAaK3e\ncpXGhZAwiD6CtrGqlf0lLknJmYHZ6UYQ9QVTALP4uP5lPrmu77e/w4edNfJwlMJh\nA+G55tEadq87OPu5DeTIw75l7cSvn0JYWYbX7lg1xSk71AwWtd9L/v8Y7Vc1Tzj5\nGJepuPNSyLjhHiFaEsZLajRMIBS+QxeSz0jYoPUCgYBy/yn5RgjtHlwOl3YWKS3c\nmKwTYjguLZ7HAsYfo8q6/uZ4KLDQAhRXk3kYJYEeQhJSl3WbQVGzLoBPvPBCXXHF\ncRLV8xFeALol7Kc6tgQljesPMUSP3YqH0pOM8X9Bmg7rWOdPwqC7Z/pSXoVuynVB\nr7WlhgrhYKSE6TjyJBrVRA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "melanoma@fluted-bee-273018.iam.gserviceaccount.com",
+  "client_id": "105794293830171383044",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/melanoma%40fluted-bee-273018.iam.gserviceaccount.com"
+}

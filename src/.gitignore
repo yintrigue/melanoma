@@ -1,0 +1,4 @@
+kaggle_symlink*
+kaggle_symlink*.*
+./kaggle_symlink*/
+*.gdoc
